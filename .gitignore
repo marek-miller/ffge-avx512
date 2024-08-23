@@ -1,0 +1,10 @@
+*.o
+*.d
+
+t-ffge
+t-ffge_prim
+t-ffge_prim_i8
+
+*.bak
+*.swp
+tmp/
