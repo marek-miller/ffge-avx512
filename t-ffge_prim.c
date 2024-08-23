@@ -25,11 +25,11 @@
 #include "utils.h"
 #include "xoshiro256ss.h"
 
-#define REPS (3L)
+#define REPS (33L)
 #define MAX_SIZE (30)
 static int64_t m[MAX_SIZE * MAX_SIZE];
 
-#define SEED UINT64_C(1337488)
+#define SEED UINT64_C(342811)
 static struct xoshiro256ss RNG;
 
 void test_ffge_prim_unit(void)

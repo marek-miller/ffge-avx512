@@ -17,36 +17,45 @@
 AS	:= nasm
 ASFLAGS	+= -felf64 -w+all -w-reloc-rel-dword -Ox
 CC	?= gcc
-CFLAGS	+= -std=c23 -Wall -Wextra -O2 -march=native
+CFLAGS	+= -std=c23 -Wall -Wextra -O3 -march=native
 LDFLAGS	+=
 LDLIBS	+=
 
-PROGS	:=
+PROGS	:= benchmark
 TESTS	:= t-ffge t-ffge_prim t-ffge_prim_i8
 
 
+bench.o:		bench.h
 ffge.o:			ffge.h
 ffge_prim_i8.o:		ffge.h
 utils.o:		utils.h
 xoshiro256ss.o:		xoshiro256ss.h
 
+benchmark:		bench.o 		\
+			ffge.o			\
+			ffge_prim_i8.o		\
+			ffge_prim_i8_helpers.o	\
+			utils.o			\
+			xoshiro256ss.o
 
 t-ffge.o:		test.h
+t-ffge_prim.o:		test.h
+t-ffge_prim_i8.o:	test.h
+
 t-ffge:			t-ffge.o		\
 			ffge.o			\
 			utils.o			\
 			xoshiro256ss.o
 
-t-ffge_prim.o:		test.h
 t-ffge_prim:		t-ffge_prim.o		\
 			ffge.o			\
 			utils.o			\
 			xoshiro256ss.o
 
-t-ffge_prim_i8.o:	test.h
 t-ffge_prim_i8:		t-ffge_prim_i8.o	\
 			ffge_prim_i8.o		\
 			ffge_prim_i8_helpers.o	\
+			utils.o			\
 			xoshiro256ss.o
 
 

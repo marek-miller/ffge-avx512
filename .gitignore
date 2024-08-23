@@ -1,6 +1,8 @@
 *.o
 *.d
 
+benchmark
+
 t-ffge
 t-ffge_prim
 t-ffge_prim_i8

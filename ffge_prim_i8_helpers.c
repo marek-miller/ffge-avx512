@@ -18,32 +18,31 @@
  * -------------------------------------------------------------------------- */
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include "ffge.h"
 
-int ffge_pivot_find_i8(int64_t *m, size_t n, size_t pr, size_t pc, uint8_t *fl)
+uint64_t ffge_pivot_find_i8(int64_t *m, size_t n, size_t pv, uint64_t fl)
 {
-	int rt = 0;
-
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
-		size_t i = pr;
-		while (i < n && m[(i*n + pc)*FFGE_WIDTH + k] == 0)
+		size_t i = pv;
+		while (i < n && m[(i*n + pv)*FFGE_WIDTH + k] == 0)
 			i++;
 
 		if (i == n) {
-			*fl &= ~(1 << k);
-			rt = -1;
+			fl &= ~(1 << k);
 			continue;
 		}
-		if (i > pr)
-			for (size_t j = pc; j < n; j++) {
+		if (i > pv)
+			for (size_t j = pv; j < n; j++) {
 				int64_t *x, *y, zz;
 
-				zz = *(x = m + (pc*n + j)*FFGE_WIDTH + k);
+				zz = *(x = m + (pv*n + j)*FFGE_WIDTH + k);
 				*x = *(y = m + ( i*n + j)*FFGE_WIDTH + k);
 				*y = zz;
 			}
 	}
 
-	return rt;
+	return fl;
 }
+

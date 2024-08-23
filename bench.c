@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- *
- * t-ffge.c: Test the implementation of ffge.                                 *
+ * bench.c: Simple benchmarking framework.                                    *
  *                                                                            *
  * Copyright 2024 ⧉⧉⧉                                                         *
  *                                                                            *
@@ -16,81 +16,37 @@
  * You should have received a copy of the GNU General Public License along    *
  * with this program.  If not, see <https://www.gnu.org/licenses/>.           *
  * -------------------------------------------------------------------------- */
-#include "test.h"
+#define _XOPEN_SOURCE 700
 
 #include <stddef.h>
-#include <stdint.h>
+#include <time.h>
 
-#include "ffge.h"
-#include "utils.h"
-#include "xoshiro256ss.h"
+#include "bench.h"
 
-#define REPS (33L)
-#define MAX_SIZE (30)
-static int64_t m[MAX_SIZE * MAX_SIZE];
+#define REPS_INIT (99)
 
-#define SEED UINT64_C(1337488)
-static struct xoshiro256ss RNG;
-
-void test_ffge_unit(void)
+int bench_mark(struct bench *b, size_t reps, int (*op)(void *), void *data)
 {
-	size_t rnk;
+	int rt = 0;
 
-	int64_t m0[1] = { 0 };
-	TEST_EQ(ffge(m0, 1, &rnk), 0);
-	TEST_EQ(rnk, 0);
+	struct timespec t1, t2;
+	volatile size_t r;
 
-	int64_t m1[1] = { 1 };
-	TEST_EQ(ffge(m1, 1, &rnk), 1);
-	TEST_EQ(rnk, 1);
-}
+	b->nanos = 0;
+	b->reps = 0;
+	for (size_t i = 0; i < REPS_INIT; i++)
+		if ((rt = op(data)) != 0)
+			return rt;
 
-void test_ffge_two(void)
-{
-	size_t rnk;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t1);
+	for (r = 0; r < reps; r++)
+		if ((rt = op(data)) != 0)
+			break;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t2);
+	
+	b->nanos = 1000000000UL * (t2.tv_sec - t1.tv_sec) 
+			+ (t2.tv_nsec - t1.tv_nsec);
+	b->reps = r;
 
-	int64_t m0[4] = { 0, 0, 0, 0 };
-	TEST_EQ(ffge(m0, 2, &rnk), 0);
-	TEST_EQ(rnk, 0);
-
-	int64_t m1[4] = { 0, 1, 0, 0 };
-	TEST_EQ(ffge(m1, 2, &rnk), 0);
-	TEST_EQ(rnk, 1);
-
-	int64_t m2[4] = { 0, 1, 1, 0 };
-	TEST_EQ(ffge(m2, 2, &rnk), 1);
-	TEST_EQ(rnk, 2);
-}
-
-
-void test_ffge_randrank(size_t n)
-{
-	size_t r;
-
-	for (size_t rep = 0; rep < REPS; rep++) {
-		for (size_t rank = 0; rank <= n; rank++) {
-			ffge_mat_genrand_prim(m, n, rank, 99, &RNG);
-			TEST_EQ(ffge(m, n, &r), rank < n ? 0 : 1);
-			TEST_ASSERT(r == rank,
-				"n=%zu, rep=%zu, rank=%zu, r=%zu",
-				n, rep, rank, r);
-		}
-	}
-}
-
-void test_ffge(void)
-{
-	test_ffge_unit();
-	test_ffge_two();
-	test_ffge_randrank(3);
-	test_ffge_randrank(5);
-	test_ffge_randrank(12);
-	test_ffge_randrank(25);
-}
-
-void TEST_MAIN(void)
-{
-	xoshiro256ss_init(&RNG, SEED);
-
-	test_ffge();
+	return rt;
 }
