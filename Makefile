@@ -17,7 +17,7 @@
 AS	:= nasm
 ASFLAGS	+= -felf64 -w+all -w-reloc-rel-dword -Ox
 CC	?= gcc
-CFLAGS	+= -std=c23 -Wall -Wextra -O3 -march=native
+CFLAGS	+= -std=c23 -Wall -Wextra -O2 -march=native
 LDFLAGS	+=
 LDLIBS	+=
 

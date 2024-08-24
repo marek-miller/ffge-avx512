@@ -41,7 +41,7 @@ int ffge_pivot_find(int64_t *m, size_t n, size_t pr, size_t pc)
 	return 0;
 }
 
-int ffge(int64_t *m, size_t n, size_t *rnk)
+size_t ffge(int64_t *m, size_t n)
 {
 	int64_t dv = 1;
 	size_t pc, pr = 0;	/* pivot column, row */
@@ -62,13 +62,10 @@ int ffge(int64_t *m, size_t n, size_t *rnk)
 		pr++;
 	}
 
-	if (rnk)
-		*rnk = pr;
-
-	return pr == n;
+	return pr;
 }
 
-int ffge_prim(int64_t *m, size_t n, size_t *rnk)
+size_t ffge_prim(int64_t *m, size_t n)
 {
 	size_t pc, pr = 0;	/* pivot column, row */
 	for (pc = 0; pc < n; pc++) {
@@ -88,9 +85,6 @@ int ffge_prim(int64_t *m, size_t n, size_t *rnk)
 		pr++;
 	}
 
-	if (rnk)
-		*rnk = pr;
-
-	return pr == n;
+	return pr;
 }
 

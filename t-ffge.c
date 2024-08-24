@@ -34,46 +34,32 @@ static struct xoshiro256ss RNG;
 
 void test_ffge_unit(void)
 {
-	size_t rnk;
-
 	int64_t m0[1] = { 0 };
-	TEST_EQ(ffge(m0, 1, &rnk), 0);
-	TEST_EQ(rnk, 0);
+	TEST_EQ(ffge(m0, 1), 0);
 
 	int64_t m1[1] = { 1 };
-	TEST_EQ(ffge(m1, 1, &rnk), 1);
-	TEST_EQ(rnk, 1);
+	TEST_EQ(ffge(m1, 1), 1);
 }
 
 void test_ffge_two(void)
 {
-	size_t rnk;
-
 	int64_t m0[4] = { 0, 0, 0, 0 };
-	TEST_EQ(ffge(m0, 2, &rnk), 0);
-	TEST_EQ(rnk, 0);
+	TEST_EQ(ffge(m0, 2), 0);
 
 	int64_t m1[4] = { 0, 1, 0, 0 };
-	TEST_EQ(ffge(m1, 2, &rnk), 0);
-	TEST_EQ(rnk, 1);
+	TEST_EQ(ffge(m1, 2), 1);
 
 	int64_t m2[4] = { 0, 1, 1, 0 };
-	TEST_EQ(ffge(m2, 2, &rnk), 1);
-	TEST_EQ(rnk, 2);
+	TEST_EQ(ffge(m2, 2), 2);
 }
 
 
 void test_ffge_randrank(size_t n)
 {
-	size_t r;
-
 	for (size_t rep = 0; rep < REPS; rep++) {
 		for (size_t rank = 0; rank <= n; rank++) {
 			ffge_mat_genrand_prim(m, n, rank, 99, &RNG);
-			TEST_EQ(ffge(m, n, &r), rank < n ? 0 : 1);
-			TEST_ASSERT(r == rank,
-				"n=%zu, rep=%zu, rank=%zu, r=%zu",
-				n, rep, rank, r);
+			TEST_EQ(ffge(m,n), rank);
 		}
 	}
 }

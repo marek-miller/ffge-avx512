@@ -28,7 +28,7 @@
 #define SEED UINT64_C(9482110)
 static struct xoshiro256ss RNG;
 
-#define SIZE (17)
+#define SIZE (12)
 static int64_t m[SIZE*SIZE];
 static alignas(64) int64_t m_i8[SIZE*SIZE * FFGE_WIDTH];
 
@@ -50,10 +50,8 @@ static int genrand_mt(void *)
 
 static int rank12(void *)
 {
-	size_t rnk;
-
 	genrand_mt(nullptr);
-	ffge(m, SIZE, &rnk);
+	ffge(m, SIZE);
 
 	return 0;
 }
@@ -61,10 +59,8 @@ static int rank12(void *)
 
 static int rank12_prim(void *)
 {
-	size_t rnk;
-
 	genrand_mt(nullptr);
-	ffge_prim(m, SIZE, &rnk);
+	ffge_prim(m, SIZE);
 
 	return 0;
 }
@@ -84,10 +80,8 @@ static int genrand_mt_i8(void *)
 	
 static int rank12_prim_i8(void *)
 {
-	uint8_t fl;
-
 	genrand_mt_i8(nullptr);
-	ffge_prim_i8(m_i8, SIZE, &fl);
+	ffge_prim_i8(m_i8, SIZE);
 
 	return 0;
 }

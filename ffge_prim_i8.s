@@ -33,9 +33,10 @@ ffge_prim_i8:
 	push	r14
 	push	r13
 	push	r12
-	push	rdx			; uint8_t *fl
+	push	rbx
 
-	mov	r12, rdi		; int64_t *m
+	mov	rbx, rdi		; int64_t *m
+	mov	r12, rdi	
 	mov	r13, rsi		; size_t n
 	xor	r14, r14		; size_t pv
 	mov	r15, r13
@@ -45,55 +46,46 @@ ffge_prim_i8:
 	vpbroadcastq zmm14, [FFGE_PRIM]
 	vpxorq	zmm15, zmm15
 
-.l0:	mov	rdi, r12
+.l0:	mov	rdi, rbx
 	mov	rsi, r13
 	mov	rdx, r14
 	mov	rcx, rax
 	call	ffge_pivot_find_i8
 
-	mov	rdi, r14
-	imul	rdi, r13
-	add	rdi, r14
-	imul	rdi, 64
-	add	rdi, r12
-	vmovdqa64 zmm0, [rdi]
-
 	mov	r8, r14
 	add	r8, 1
 	cmp	r8, r13
-	jae	.l8a
-
-	mov	rdi, r8
-	imul	rdi, r13
-	add	rdi, r14
-	imul	rdi, 64
-	add	rdi, r12
-
-.l8:
-	vmovdqa64 zmm1, [rdi]
-
-	mov	r9, r14
-	add	r9, 1
-	cmp	r9, r13
-	jae	.l9a
-
-	mov	r10, r14
-	imul	r10, r13
-	add	r10, r9
-	imul	r10, 64
-	add	r10, r12
+	jae	.rt
 
 	mov	r11, r8
 	imul	r11, r13
-	add	r11, r9
+	add	r11, r14
 	imul	r11, 64
-	add	r11, r12
-.l9:
-	vmovdqa64 zmm2, [r10]
-	vmovdqa64 zmm3, [r11]
+	add	r11, rbx
 
-	vpmullq	zmm3, zmm0, zmm3
-	vpmullq	zmm2, zmm1, zmm2
+	vmovdqa64 zmm0, [r12]
+.l8:	vmovdqa64 zmm1, [r11]
+
+	mov	rcx, r14
+	add	rcx, 1
+
+	mov	r9, r8
+	imul	r9, r13
+	add	r9, rcx
+	imul	r9, 64
+	add	r9, rbx
+
+	mov	r10, r14
+	imul	r10, r13
+	add	r10, rcx
+	imul	r10, 64
+	add	r10, rbx
+
+.l9:	vmovdqa64 zmm2, [r10]
+	vmovdqa64 zmm3, [r9]
+
+	vpmullq	zmm3, zmm3, zmm0
+	vpmullq	zmm2, zmm2, zmm1
 	vpsubq	zmm3, zmm3, zmm2
 
 	vpmovq2m k3, zmm3
@@ -101,10 +93,10 @@ ffge_prim_i8:
 
 	vpandq	zmm5, zmm4, zmm14
 	vpsraq	zmm6, zmm4, 31
-	vpandq	zmm6, zmm6, zmm14
-	vpsraq	zmm7, zmm4, 62
-	vpandq	zmm7, zmm7, zmm14
-	vpaddq	zmm5, zmm5, zmm6
+	vpandq	zmm7, zmm6, zmm14
+	vpaddq	zmm5, zmm5, zmm7
+	vpsraq	zmm6, zmm4, 62
+	vpandq	zmm7, zmm6, zmm14
 	vpaddq	zmm5, zmm5, zmm7
 	vpsraq	zmm6, zmm5, 31
 	vpaddq	zmm5, zmm5, zmm6
@@ -114,36 +106,33 @@ ffge_prim_i8:
 	vpmovq2m k6, zmm6
 
 	vpsubq	zmm5 {k3}, zmm15, zmm5
-	vmovdqa64 zmm3, zmm15
-	vmovdqa64 zmm3 {k6}, zmm5
-	vmovdqa64 [r11], zmm3
+	vmovdqa64 zmm6, zmm15
+	vmovdqa64 zmm6 {k6}, zmm5
+	vmovdqa64 [r9], zmm6
 
+	add	r9, 64
 	add	r10, 64
-	add	r11, 64
-	inc	r9
-	cmp	r9, r13
+	inc	rcx
+	cmp	rcx, r13
 	jb	.l9
-.l9a:
-	vmovdqa64 [rdi], zmm15
-	add	rdi, r15
+
+	vmovdqa64 [r11], zmm15
+
+	add	r11, r15
 	inc	r8
 	cmp	r8, r13
 	jb	.l8
-.l8a:
+
+	add	r12, r15
+	add	r12, 64
 	inc	r14
 	cmp	r14, r13
 	jb	.l0
 
-	pop	rdx
+.rt:	pop	rbx
 	pop	r12
 	pop	r13
 	pop	r14
 	pop	r15
 
-	test	rdx, rdx
-	jz	.rt
-	mov	[rdx], al
-.rt:	cmp	al, 0xff
-	sete	al
 	ret
-

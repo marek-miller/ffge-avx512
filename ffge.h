@@ -32,13 +32,9 @@
  *
  *     m[i*n + j]
  *
- * If rnk is not nullptr, then the rank of m is stored at the address pointed
- * to by rnk.
- *
- * The function returns 1, if the matrix m has rank equal to n, otherwise
- * it returns 0.
+ * The function returns the rank of the matrix m.
  */
-int ffge(int64_t *m, size_t n, size_t *rnk);
+size_t ffge(int64_t *m, size_t n);
 
 /* Perform in-place FFGE of a square matrix m of size n over the prime
  * field Z_p for p = FFGE_PRIM.
@@ -48,14 +44,9 @@ int ffge(int64_t *m, size_t n, size_t *rnk);
  *
  *     m[i*n + j]
  *
- * If rnk is not nullptr, then the rank (modulo FFGE_PRIM) of m is stored
- *  at the address pointed to by rnk.
- *
- * The function returns 1, if the matrix m has rank equal to n for
- * n < FFGE_PRIM; if the matrix is singular over Z_p, the function returns 0,
- * in case of error (e.g. invalid matrix elements), it returns -1.
+ * The function returns the rank of the matrix m (modulo FFGE_PRIM).
  */
-int ffge_prim(int64_t *m, size_t n, size_t *rnk);
+size_t ffge_prim(int64_t *m, size_t n);
 
 /* Perform in-place FFGE of FFGE_WIDTH packed square matrices of size n,
  * over the prime field Z_p for p = FFGE_PRIM = 2^31 - 1.
@@ -70,22 +61,18 @@ int ffge_prim(int64_t *m, size_t n, size_t *rnk);
  * matrices that are full-rank.  The matrices that are singular (and only
  * those) are destroyed as a result of this function.
  *
- * If fl is not nullptr, the it will hold a set of flags indicating which
- * matrices have full rank, i.e.
- *
- *     (*fl >> k) & 1
- *
- * is equal to 1 if k-th matrix has full rank, k = 0, 1, ..., FFGE_WIDTH-1.
- *
  * The matrix m must be aligned to the 64 byte boundary.  For example, for
  * a square matrix of size SIZ, one can alocate static storage explicitly by:
  *
  *     alignas(64) uint64_t m[SIZ*SIZ];
  *
- * The function returns 1 if at least one of the matrices has full rank,
- * otherwise it returns 0 if all matrices are singular or -1 in case of
- * an error (e.g. invalid matrix elements).
+ * The function return a set of flags indicating which matrices have full rank,
+ * i.e. for fl = ffge_prim_i8(),
+ *
+ *     (*fl >> k) & 1
+ *
+ * is equal to 1 if k-th matrix has full rank, k = 0, 1, ..., FFGE_WIDTH-1.
  */
-int ffge_prim_i8(int64_t *m, size_t n, uint8_t *fl);
+uint8_t ffge_prim_i8(int64_t *m, size_t n);
 
 #endif /* FFGE_H */

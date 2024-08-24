@@ -36,24 +36,19 @@ static alignas(64) int64_t m_i8[MAX_SIZE * MAX_SIZE * FFGE_WIDTH];
 
 static void test_ffge_prim_i8_unit(void)
 {
-	uint8_t fl = 0;
 	for (size_t k = 0; k < FFGE_WIDTH; k++)
 		m_i8[k] = 1;
-	TEST_EQ(ffge_prim_i8(m_i8, 1, &fl), 1);
-	TEST_EQ(fl, 0xff);
+	TEST_EQ(ffge_prim_i8(m_i8, 1), 0xff);
 
 	m_i8[3] = 0;
-	TEST_EQ(ffge_prim_i8(m_i8, 1, &fl), 0);
-	TEST_EQ(fl, 0b11110111);
+	TEST_EQ(ffge_prim_i8(m_i8, 1), 0b11110111);
 
 	m_i8[6] = 0;
-	TEST_EQ(ffge_prim_i8(m_i8, 1, &fl), 0);
-	TEST_EQ(fl, 0b10110111);
+	TEST_EQ(ffge_prim_i8(m_i8, 1), 0b10110111);
 }  
 
 static void test_ffge_prim_i8_two_01(void)
 {
-	uint8_t fl = 0;
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
 		m_i8[(0*2 + 0)*FFGE_WIDTH + k] = 0;
 		m_i8[(0*2 + 1)*FFGE_WIDTH + k] = 1;
@@ -61,14 +56,12 @@ static void test_ffge_prim_i8_two_01(void)
 		m_i8[(1*2 + 1)*FFGE_WIDTH + k] = 0;
 	}
 
-	TEST_EQ(ffge_prim_i8(m_i8, 2, &fl), 1);
-	TEST_EQ(fl, 0xff);
+	TEST_EQ(ffge_prim_i8(m_i8, 2), 0xff);
 } 
 
 
 static void test_ffge_prim_i8_two_02(void)
 {
-	uint8_t fl = 0;
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
 		m_i8[(0*2 + 0)*FFGE_WIDTH + k] = 0;
 		m_i8[(0*2 + 1)*FFGE_WIDTH + k] = 1;
@@ -77,15 +70,14 @@ static void test_ffge_prim_i8_two_02(void)
 	}
 	m_i8[(0*2 + 1)*FFGE_WIDTH + 4] = 0;
 
-	TEST_EQ(ffge_prim_i8(m_i8, 2, &fl), 0);
-	TEST_EQ(fl, 0b11101111);
+	TEST_EQ(ffge_prim_i8(m_i8, 2), 0b11101111);
 } 
 
 static void test_ffge_prim_i8_randrank(size_t n)
 {
  for (size_t rep = 0; rep < REPS; rep++) {
 
-	uint8_t fl = 0, fl_ref = 0;
+	uint8_t fl_ref = 0;
 
 	/* generate random matrix; set ref. flags, pack it */
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
@@ -99,8 +91,7 @@ static void test_ffge_prim_i8_randrank(size_t n)
 				m_i8[(i*n + j)*FFGE_WIDTH + k] = m[i*n + j];
 	}
 
-	TEST_EQ(ffge_prim_i8(m_i8, n, &fl), fl_ref == 0xff);
-	TEST_ASSERT(fl == fl_ref, "n=%zu, rep=%zu, fl=%u", n, rep, fl);
+	TEST_EQ(ffge_prim_i8(m_i8, n), fl_ref);
  }
 }
 
