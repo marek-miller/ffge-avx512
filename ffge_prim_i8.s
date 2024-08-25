@@ -38,7 +38,7 @@ ffge_prim_i8:
 	; if ( n == 0 ) return 0;
 	xor		rax, rax
 	test		rsi, rsi
-	jz		.rt
+	jz		.rt0
 
 	; store registers, align the stack to 0x10
 	push		r15
@@ -72,7 +72,7 @@ ffge_prim_i8:
 	mov		rdx, r14
 	add		rdx, 1
 	cmp		rdx, r13
-	jae		.rt
+	jae		.rt1
 
 	; r11 points to m[i*n + pv]
 	mov		r11, rdx
@@ -152,11 +152,11 @@ ffge_prim_i8:
 	cmp		r14, r13
 	jb		.l0
 
-	pop		rbx
+.rt1:	pop		rbx
 	pop		r12
 	pop		r13
 	pop		r14
 	pop		r15
 
-.rt:	vzeroupper
+.rt0:	vzeroupper
 	ret
