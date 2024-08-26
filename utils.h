@@ -24,12 +24,10 @@
 
 #include "xoshiro256ss.h"
 
-void ffge_mat_print(int64_t *m, size_t n);
-
 /* Generate a random square matrix of size n and having rank equal to rnk <= n.
  *
  * The element of the matrix are numbers from Z_p prime field for
- * p = FFGE_PRIM.  Also, both n and rnk are assumed to be less than FFGE_PRIM.
+ * p = FFGE_PRIM. Both n and rnk are assumed to be less than FFGE_PRIM.
  *
  * Perform at most rd rounds of elementary matrix row and column operations.
  *

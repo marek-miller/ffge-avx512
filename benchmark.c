@@ -38,7 +38,6 @@ static double bench_avgmicros(struct bench *b)
 	return (double)b->nanos / b->reps / 1000L;
 }
 
-
 static int genrand_mt(void *)
 {
 	size_t rnk = (xoshiro256ss_next(&RNG) % 2) == 1 ?

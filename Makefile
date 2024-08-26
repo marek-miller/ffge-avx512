@@ -25,6 +25,7 @@ PROGS	:= benchmark
 TESTS	:= t-ffge t-ffge_prim t-ffge_prim_i8
 
 
+# Source code dependencies
 bench.o:		bench.h
 ffge.o:			ffge.h
 ffge_prim_i8.o:		ffge.h
@@ -38,8 +39,9 @@ benchmark:		bench.o 		\
 			utils.o			\
 			xoshiro256ss.o
 
-t-ffge.o:		test.h
-t-ffge_prim.o:		test.h
+# Tests
+t-ffge.o		\
+t-ffge_prim.o		\
 t-ffge_prim_i8.o:	test.h
 
 t-ffge:			t-ffge.o		\
@@ -62,9 +64,9 @@ t-ffge_prim_i8:		t-ffge_prim_i8.o	\
 .PHONY:	all check clean debug
 .DEFAULT_GOAL := all
 
-all: $(PROGS) $(BENCHES) $(TESTS)
+all: $(PROGS) $(TESTS)
 
-debug: $(PROGS) $(BENCHES) $(TESTS)
+debug: $(PROGS) $(TESTS)
 debug: ASFLAGS	+= -DDEBUG -Og -Fdwarf
 debug: CFLAGS	+= -DDEBUG -g -Og
 
@@ -76,5 +78,5 @@ check: $(TESTS)
 
 clean:
 	$(RM) *.o *.d
-	$(RM) $(PROGS) $(BENCHES) $(TESTS)
+	$(RM) $(PROGS) $(TESTS)
 

@@ -18,7 +18,6 @@
  * -------------------------------------------------------------------------- */
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "ffge.h"
 
@@ -45,4 +44,3 @@ uint64_t ffge_pivot_find_i8(int64_t *m, size_t n, size_t pv, uint64_t fl)
 
 	return fl;
 }
-

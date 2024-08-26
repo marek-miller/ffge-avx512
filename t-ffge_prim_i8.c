@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- *
- * t-ffge_prim_i8.c: Test SIMD implementation of ffge_prim                    *
+ * t-ffge_prim_i8.c: Test the implementation of ffge_prim_i8                  *
  *                                                                            *
  * Copyright 2024 ⧉⧉⧉                                                         *
  *                                                                            *
@@ -77,21 +77,21 @@ static void test_ffge_prim_i8_randrank(size_t n)
 {
  for (size_t rep = 0; rep < REPS; rep++) {
 
-	uint8_t fl_ref = 0;
+	uint8_t fl = 0;
 
 	/* generate random matrix; set ref. flags, pack it */
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
 		size_t rnk = (xoshiro256ss_next(&RNG) % 2) == 1 ? 
 			n : xoshiro256ss_next(&RNG) % n;
 		if (rnk == n)
-			fl_ref |= (1 << k);
+			fl |= (1 << k);
 		ffge_mat_genrand_prim(m, n, rnk, 99, &RNG);
 		for (size_t i = 0; i < n; i++)
 			for (size_t j = 0; j < n; j++)
 				m_i8[(i*n + j)*FFGE_WIDTH + k] = m[i*n + j];
 	}
 
-	TEST_EQ(ffge_prim_i8(m_i8, n), fl_ref);
+	TEST_EQ(ffge_prim_i8(m_i8, n), fl);
  }
 }
 

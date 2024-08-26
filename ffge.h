@@ -39,6 +39,8 @@ size_t ffge(int64_t *m, size_t n);
 /* Perform in-place FFGE of a square matrix m of size n over the prime
  * field Z_p for p = FFGE_PRIM.
  *
+ * Assume n < FFGE_PRIM.
+ *
  * The martix is represented as a continuous array of rows, i.e.
  * if i, j = 0, 1, 2, ..., n-1, then the matrix element m_ij is stored at:
  *
@@ -51,6 +53,8 @@ size_t ffge_prim(int64_t *m, size_t n);
 /* Perform in-place FFGE of FFGE_WIDTH packed square matrices of size n,
  * over the prime field Z_p for p = FFGE_PRIM = 2^31 - 1.
  *
+ * Assume n < FFGE_PRIM.
+ *
  * The matrices are represented as a continuous array of packed rows, i.e. if
  * i, j = 0, 1, 2, ... n-1, and k = 0, 1, ..., FFGE_WIDTH-1, then
  * the i,j-th element of the k-th matrix, (m_k)_{i,j} is stored at
@@ -62,14 +66,18 @@ size_t ffge_prim(int64_t *m, size_t n);
  * those) are destroyed as a result of this function.
  *
  * The matrix m must be aligned to the 64 byte boundary.  For example, for
- * a square matrix of size SIZ, one can alocate static storage explicitly by:
+ * a square matrix of size SIZE, one can alocate static storage explicitly by:
  *
- *     alignas(64) uint64_t m[SIZ*SIZ];
+ *     alignas(64) uint64_t m[SIZE * SIZE * FFGE_WIDTH];
  *
- * The function return a set of flags indicating which matrices have full rank,
- * i.e. for fl = ffge_prim_i8(),
+ * The function returns a set of flags indicating which matrices have full rank,
+ * i.e. for 
  *
- *     (*fl >> k) & 1
+ *     uint8_t fl = ffge_prim_i8(m, n);
+ *
+ * the number
+ *
+ *     (*f >> k) & 1
  *
  * is equal to 1 if k-th matrix has full rank, k = 0, 1, ..., FFGE_WIDTH-1.
  */

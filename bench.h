@@ -21,7 +21,6 @@
 
 #include <stddef.h>
 
-
 struct bench {
 	unsigned long nanos;
 	size_t reps;

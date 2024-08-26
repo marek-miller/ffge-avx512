@@ -87,4 +87,3 @@ size_t ffge_prim(int64_t *m, size_t n)
 
 	return pr;
 }
-

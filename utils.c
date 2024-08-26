@@ -18,29 +18,10 @@
  * -------------------------------------------------------------------------- */
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "ffge.h"
 #include "utils.h"
 #include "xoshiro256ss.h"
-
-void ffge_mat_print(int64_t *m, size_t n)
-{
-	printf("{\n\t");
-	for (size_t i = 0; i < n; i++) {
-		for (size_t j = 0; j < n; j++) {
-			printf("%3ld", m[i*n + j]);
-			if (j < n - 1)
-				printf(", ");
-			else if (i < n - 1)
-				printf(",\n\t");
-			else
-				printf("\n");
-		}
-	}
-	printf("}\n");
-}
-
 
 void ffge_mat_genrand_prim(int64_t *m, size_t n, size_t rnk, size_t rd,
 			struct xoshiro256ss *rng)
@@ -93,4 +74,3 @@ void ffge_mat_genrand_prim(int64_t *m, size_t n, size_t rnk, size_t rd,
 				(m[i*n + c1] + ss[1] * m[i*n + c2]) % FFGE_PRIM;
 	}
 }
-

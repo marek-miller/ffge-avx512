@@ -42,7 +42,6 @@ static _Atomic bool TEST_RT = true;
 			TEST_XSTR(a), TEST_XSTR(b));			\
 	})
 
-
 static void TEST_MAIN(void);
 
 int main(int, char **)
