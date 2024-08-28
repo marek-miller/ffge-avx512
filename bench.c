@@ -34,7 +34,8 @@ int bench_mark(struct bench *b, size_t reps, int (*op)(void *), void *data)
 
 	b->nanos = 0;
 	b->reps = 0;
-	for (size_t i = 0; i < REPS_INIT; i++)
+	/* First, warm the cache up */
+	for (volatile size_t i = 0; i < REPS_INIT; i++)
 		if ((rt = op(data)) != 0)
 			return rt;
 

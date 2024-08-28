@@ -40,6 +40,7 @@ static double bench_avgmicros(struct bench *b)
 
 static int genrand_mt(void *)
 {
+	/* Generate random matrices: 50% full-rank, 50% singular. */
 	size_t rnk = (xoshiro256ss_next(&RNG) % 2) == 1 ?
 		SIZE : xoshiro256ss_next(&RNG) % SIZE;
 	ffge_mat_genrand_prim(m, SIZE, rnk, 99, &RNG);
@@ -66,6 +67,7 @@ static int rank12_prim(void *)
 
 static int genrand_mt_i8(void *)
 {
+	/* Generate random matrices: 50% full-rank, 50% singular. */
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
 		genrand_mt(nullptr);
 		for (size_t i = 0; i < SIZE; i++)
@@ -117,5 +119,4 @@ int main(int, char **)
 		(bench_avgmicros(&b) - t_genrand_i8) / FFGE_WIDTH); 
 
 	return 0;
-
 }

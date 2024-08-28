@@ -26,6 +26,21 @@ struct bench {
 	size_t reps;
 };
 
+/* Measure the performance of the supplied function op and store
+ * the results in b.
+ *
+ * The function op is called repeatedly with poiter data as its argument.
+ * As long as op returns 0, the number of calls is at least reps, but can
+ * be larger: the function can be called a few times before the time
+ * measurement to warm the cache up.
+ *
+ * If at any point the function op returns a number different from 0,
+ * the measurement is interrupted and bench_mark returns the same number.
+ *
+ * After the call, struct bench pointed to by b holds in b->reps the total
+ * number of calls to op (excluding the cache warm-up calls), and b->nanos
+ * holds the number of nanoseconds between the first and the last call.
+ */ 
 int bench_mark(struct bench *b, size_t reps, int (*op)(void *), void *data);
 
 #endif /* BENCH_H */
