@@ -45,7 +45,7 @@ static void test_ffge_prim_i8_unit(void)
 
 	m_i8[6] = 0;
 	TEST_EQ(ffge_prim_i8(m_i8, 1), 0b10110111);
-}  
+}
 
 static void test_ffge_prim_i8_two_01(void)
 {
@@ -57,7 +57,7 @@ static void test_ffge_prim_i8_two_01(void)
 	}
 
 	TEST_EQ(ffge_prim_i8(m_i8, 2), 0xff);
-} 
+}
 
 
 static void test_ffge_prim_i8_two_02(void)
@@ -71,7 +71,7 @@ static void test_ffge_prim_i8_two_02(void)
 	m_i8[(0*2 + 1)*FFGE_WIDTH + 4] = 0;
 
 	TEST_EQ(ffge_prim_i8(m_i8, 2), 0b11101111);
-} 
+}
 
 static void test_ffge_prim_i8_randrank(size_t n)
 {
@@ -81,7 +81,7 @@ static void test_ffge_prim_i8_randrank(size_t n)
 
 	/* generate random matrix; set ref. flags, pack it */
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
-		size_t rnk = (xoshiro256ss_next(&RNG) % 2) == 1 ? 
+		size_t rnk = (xoshiro256ss_next(&RNG) % 2) == 1 ?
 			n : xoshiro256ss_next(&RNG) % n;
 		if (rnk == n)
 			fl |= (1 << k);

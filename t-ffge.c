@@ -32,7 +32,7 @@ static int64_t m[MAX_SIZE * MAX_SIZE];
 #define SEED UINT64_C(1337488)
 static struct xoshiro256ss RNG;
 
-void test_ffge_unit(void)
+static void test_ffge_unit(void)
 {
 	int64_t m0[1] = { 0 };
 	TEST_EQ(ffge(m0, 1), 0);
@@ -41,7 +41,7 @@ void test_ffge_unit(void)
 	TEST_EQ(ffge(m1, 1), 1);
 }
 
-void test_ffge_two(void)
+static void test_ffge_two(void)
 {
 	int64_t m0[4] = { 0, 0, 0, 0 };
 	TEST_EQ(ffge(m0, 2), 0);
@@ -54,7 +54,7 @@ void test_ffge_two(void)
 }
 
 
-void test_ffge_randrank(size_t n)
+static void test_ffge_randrank(size_t n)
 {
 	for (size_t rep = 0; rep < REPS; rep++) {
 		for (size_t rank = 0; rank <= n; rank++) {
@@ -64,7 +64,7 @@ void test_ffge_randrank(size_t n)
 	}
 }
 
-void test_ffge(void)
+static void test_ffge(void)
 {
 	test_ffge_unit();
 	test_ffge_two();
@@ -74,7 +74,7 @@ void test_ffge(void)
 	test_ffge_randrank(25);
 }
 
-void TEST_MAIN(void)
+static void TEST_MAIN(void)
 {
 	xoshiro256ss_init(&RNG, SEED);
 

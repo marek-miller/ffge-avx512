@@ -21,6 +21,14 @@
 
 #include "ffge.h"
 
+/* Find the next row with non-zero element at pivot column pc. Swap rows.
+ *
+ * The matrix m is in fact packed FFGE_WIDTH matrices, the argument k
+ * is the matrix index.
+ *
+ * Returns the flags fl with the k-th flag zeroed if the corresponding matrix
+ * is singular.
+ */
 uint64_t ffge_pivot_find_i8(int64_t *m, size_t n, size_t pv, uint64_t fl)
 {
 	for (size_t k = 0; k < FFGE_WIDTH; k++) {
@@ -32,10 +40,9 @@ uint64_t ffge_pivot_find_i8(int64_t *m, size_t n, size_t pv, uint64_t fl)
 			fl &= ~(1 << k);
 			continue;
 		}
-		if (i > pv)
+		if (i > pv)			/* swap rows */
 			for (size_t j = pv; j < n; j++) {
 				int64_t *x, *y, zz;
-
 				zz = *(x = m + (pv*n + j)*FFGE_WIDTH + k);
 				*x = *(y = m + ( i*n + j)*FFGE_WIDTH + k);
 				*y = zz;

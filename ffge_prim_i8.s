@@ -52,7 +52,7 @@ ffge_prim_i8:
 	mov		r14, rsi
 	imul		r14, rsi
 	sub		r14, 1
-	shl		r14, 6 
+	shl		r14, 6
 	add		r14, rdi		; r14 -> m[n*n - 1]
 	vpbroadcastq	zmm14, [FFGE_PRIM]
 	vpxorq		zmm15, zmm15

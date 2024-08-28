@@ -21,6 +21,12 @@
 
 #include "ffge.h"
 
+/* Find the next row with non-zero element at pivot column pc. Swap rows.
+ *
+ * Returns
+ * 	 0	- if no need for swap or the next pivot row foud.
+ *	-1	- if no pivot row found and the matrix is singular.
+ */
 int ffge_pivot_find(int64_t *m, size_t n, size_t pr, size_t pc)
 {
 	size_t i = pr;
@@ -29,10 +35,9 @@ int ffge_pivot_find(int64_t *m, size_t n, size_t pr, size_t pc)
 
 	if (i == n)
 		return -1;
-	if (i > pr)
+	if (i > pr)			/* swap rows i and pr */
 		for (size_t j = pc; j < n; j++) {
 			int64_t *x, *y, zz;
-
 			zz = *(x = m + pr*n + j);
 			*x = *(y = m +  i*n + j);
 			*y = zz;
@@ -44,7 +49,7 @@ int ffge_pivot_find(int64_t *m, size_t n, size_t pr, size_t pc)
 size_t ffge(int64_t *m, size_t n)
 {
 	int64_t dv = 1;
-	size_t pc, pr = 0;	/* pivot column, row */
+	size_t pc, pr = 0;		/* pivot column, row */
 	for (pc = 0; pc < n; pc++) {
 		if (ffge_pivot_find(m, n, pr, pc) < 0)
 			continue;
@@ -67,7 +72,7 @@ size_t ffge(int64_t *m, size_t n)
 
 size_t ffge_prim(int64_t *m, size_t n)
 {
-	size_t pc, pr = 0;	/* pivot column, row */
+	size_t pc, pr = 0;		/* pivot column, row */
 	for (pc = 0; pc < n; pc++) {
 		if (ffge_pivot_find(m, n, pr, pc) < 0)
 			continue;
