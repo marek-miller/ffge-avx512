@@ -14,35 +14,41 @@
 # You should have received a copy of the GNU General Public License along     #
 # with this program.  If not, see <https://www.gnu.org/licenses/>.            #
 # --------------------------------------------------------------------------- #
-AS	:= nasm
-ASFLAGS	+= -felf64 -w+all -w-reloc-rel-dword -Ox
-CC	?= gcc
-CFLAGS	+= -std=c23 -Wall -Wextra -O2 -march=native
-LDFLAGS	+=
-LDLIBS	+=
-
-PROGS	:= benchmark
-TESTS	:= t-ffge t-ffge_prim t-ffge_prim_i8
+AS		:=	nasm
+ASFLAGS		+=	-felf64 -w+all -w-reloc-rel-dword -Ox
+CC		?=	gcc
+CFLAGS		+=	-std=c23 -Wall -Wextra -O2 -march=native
+LDFLAGS		+=
+LDLIBS		+=
 
 
 # Source code dependencies
+LIBS		:= 	libffge.a
+PROGS		:=	benchmark
+
+FFGE_OBJS 	:=	ffge.o			\
+			ffge_prim_i8.o 		\
+			ffge_prim_i8_helpers.o
+$(FFGE_OBJS):		ffge.h
+
 bench.o:		bench.h
-ffge.o:			ffge.h
-ffge_prim_i8.o:		ffge.h
 utils.o:		utils.h
 xoshiro256ss.o:		xoshiro256ss.h
 
 benchmark:		bench.o 		\
-			ffge.o			\
-			ffge_prim_i8.o		\
-			ffge_prim_i8_helpers.o	\
+			$(FFGE_OBJS)		\
 			utils.o			\
 			xoshiro256ss.o
 
 # Tests
-t-ffge.o		\
-t-ffge_prim.o		\
-t-ffge_prim_i8.o:	test.h
+TESTS		:=	t-ffge			\
+			t-ffge_prim		\
+			t-ffge_prim_i8
+
+TEST_OBJS	:=	t-ffge.o		\
+			t-ffge_prim.o		\
+			t-ffge_prim_i8.o
+$(TEST_OBJS):		test.h
 
 t-ffge:			t-ffge.o		\
 			ffge.o			\
@@ -64,11 +70,15 @@ t-ffge_prim_i8:		t-ffge_prim_i8.o	\
 .PHONY:	all check clean debug
 .DEFAULT_GOAL := all
 
-all: $(PROGS) $(TESTS)
+all: $(LIBS) $(PROGS) $(TESTS)
 
 debug: $(PROGS) $(TESTS)
 debug: ASFLAGS	+= -DDEBUG -Og -Fdwarf
 debug: CFLAGS	+= -DDEBUG -g -Og
+
+libffge.a: $(FFGE_OBJS)
+	$(AR) rsc $@ $^
+
 
 check: $(TESTS)
 	@for tt in $(TESTS); do						\
@@ -78,5 +88,7 @@ check: $(TESTS)
 
 clean:
 	$(RM) *.o *.d
-	$(RM) $(PROGS) $(TESTS)
+	$(RM) $(LIBS)
+	$(RM) $(PROGS)
+	$(RM) $(TESTS)
 

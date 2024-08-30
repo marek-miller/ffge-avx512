@@ -1,6 +1,9 @@
 *.o
 *.d
 
+*.a
+*.so
+
 benchmark
 
 t-ffge
