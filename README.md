@@ -57,6 +57,18 @@ To compile the library, run:
 make all
 ```
 
+To clean the compilation artifacts:
+
+```bash
+make clean
+```
+
+or to clean everything, including the compiled applications and libraries:
+
+```bash
+make distclean
+```
+
 ### Testing
 
 Assuming your CPU supports AVX-512, run the library's test suite by typing:
@@ -68,8 +80,8 @@ make check
 ### Installation
 
 No installation mechanism has been provided yet.  Simply copy the static
-library file `libffge.a` and the header `ffge.h` to a location appropriate
-for your system.
+library file `libffge.a` or the dynamic library `libffge.so`, and the header
+`ffge.h` to a location appropriate for your system.
 
 ### API documentation
 

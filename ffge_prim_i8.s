@@ -63,7 +63,7 @@ ffge_prim_i8:
 	push		rcx
 	mov		rdx, rcx
 	mov		rcx, rax
-	call		ffge_pivot_find_i8
+	call		ffge_pivot_find_i8 wrt ..plt
 	pop		rcx
 	pop		rdx
 	pop		rsi

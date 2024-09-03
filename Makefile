@@ -17,58 +17,41 @@
 AS		:=	nasm
 ASFLAGS		+=	-felf64 -w+all -w-reloc-rel-dword -Ox
 CC		?=	gcc
-CFLAGS		+=	-std=c23 -Wall -Wextra -O2 -march=native
+CFLAGS		+=	-std=c23 -MMD -MP -Wall -Wextra -O2 -march=native
+DEPS		:=	$(wildcard *.d)
 LDFLAGS		+=
 LDLIBS		+=
 
 
 # Source code dependencies
-LIBS		:= 	libffge.a
-PROGS		:=	benchmark
+LIBS			:= 	libffge.a libffge.so
+LIBS_OBJS	 	:=	ffge.o			\
+				ffge_prim_i8.o 		\
+				ffge_prim_i8_helpers.o
+ffge_prim_i8.o:			ffge.h
 
-FFGE_OBJS 	:=	ffge.o			\
-			ffge_prim_i8.o 		\
-			ffge_prim_i8_helpers.o
-$(FFGE_OBJS):		ffge.h
+PROGS			:=	benchmark
+$(PROGS):			$(LIBS_OBJS)
 
-bench.o:		bench.h
-utils.o:		utils.h
-xoshiro256ss.o:		xoshiro256ss.h
+benchmark:			bench.o 		\
+				utils.o			\
+				xoshiro256ss.o
 
-benchmark:		bench.o 		\
-			$(FFGE_OBJS)		\
-			utils.o			\
-			xoshiro256ss.o
+TESTS			:=	t-ffge			\
+				t-ffge_prim		\
+				t-ffge_prim_i8
 
-# Tests
-TESTS		:=	t-ffge			\
-			t-ffge_prim		\
-			t-ffge_prim_i8
-
-TEST_OBJS	:=	t-ffge.o		\
-			t-ffge_prim.o		\
-			t-ffge_prim_i8.o
-$(TEST_OBJS):		test.h
-
-t-ffge:			t-ffge.o		\
-			ffge.o			\
-			utils.o			\
-			xoshiro256ss.o
-
-t-ffge_prim:		t-ffge_prim.o		\
-			ffge.o			\
-			utils.o			\
-			xoshiro256ss.o
-
-t-ffge_prim_i8:		t-ffge_prim_i8.o	\
-			ffge_prim_i8.o		\
-			ffge_prim_i8_helpers.o	\
-			utils.o			\
-			xoshiro256ss.o
+$(TESTS):			$(LIBS_OBJS)		\
+				utils.o			\
+				xoshiro256ss.o
 
 
-.PHONY:	all check clean debug
+.PHONY:	all check clean debug distclean
 .DEFAULT_GOAL := all
+
+ifneq ($(DEPS),)
+include $(DEPS)
+endif
 
 all: $(LIBS) $(PROGS) $(TESTS)
 
@@ -76,9 +59,11 @@ debug: $(PROGS) $(TESTS)
 debug: ASFLAGS	+= -DDEBUG -Og -Fdwarf
 debug: CFLAGS	+= -DDEBUG -g -Og
 
-libffge.a: $(FFGE_OBJS)
+libffge.a: $(LIBS_OBJS)
 	$(AR) rsc $@ $^
 
+libffge.so: $(LIBS_OBJS)
+	$(CC) -shared $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 check: $(TESTS)
 	@for tt in $(TESTS); do						\
@@ -88,6 +73,8 @@ check: $(TESTS)
 
 clean:
 	$(RM) *.o *.d
+
+distclean: clean
 	$(RM) $(LIBS)
 	$(RM) $(PROGS)
 	$(RM) $(TESTS)
