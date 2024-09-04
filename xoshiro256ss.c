@@ -63,7 +63,6 @@ void xoshiro256ss_init(struct xoshiro256ss *rng, const uint64_t seed)
    The state must be seeded so that it is not everywhere zero. If you have
    a 64-bit seed, we suggest to seed a splitmix64 generator and use its
    output to fill s. */
-
 static uint64_t rotl(const uint64_t x, int k)
 {
 	return (x << k) | (x >> (64 - k));
@@ -87,7 +86,6 @@ uint64_t xoshiro256ss_next(struct xoshiro256ss *rng)
 /* This is the jump function for the generator. It is equivalent
    to 2^128 calls to next(); it can be used to generate 2^128
    non-overlapping subsequences for parallel computations. */
-
 void xoshiro256ss_jump(struct xoshiro256ss *rng)
 {
 	static const uint64_t JUMP[] = {
@@ -118,7 +116,6 @@ void xoshiro256ss_jump(struct xoshiro256ss *rng)
    2^192 calls to next(); it can be used to generate 2^64 starting points,
    from each of which jump() will generate 2^64 non-overlapping
    subsequences for parallel distributed computations. */
-
 void xoshiro256ss_longjump(struct xoshiro256ss *rng)
 {
 	static const uint64_t LONG_JUMP[] = {

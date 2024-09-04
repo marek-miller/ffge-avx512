@@ -56,10 +56,14 @@ static void test_ffge_two(void)
 
 static void test_ffge_randrank(size_t n)
 {
+	size_t r;
+
 	for (size_t rep = 0; rep < REPS; rep++) {
 		for (size_t rank = 0; rank <= n; rank++) {
 			ffge_mat_genrand_prim(m, n, rank, 99, &RNG);
-			TEST_EQ(ffge(m,n), rank);
+			TEST_ASSERT((r = ffge(m, n)) == rank,
+				"rank=%zu, rank_exp=%zu, n=%zu, rep=%zu",
+					r, rank, n, rep);
 		}
 	}
 }
@@ -67,7 +71,9 @@ static void test_ffge_randrank(size_t n)
 static void test_ffge(void)
 {
 	test_ffge_unit();
+
 	test_ffge_two();
+
 	test_ffge_randrank(3);
 	test_ffge_randrank(5);
 	test_ffge_randrank(12);

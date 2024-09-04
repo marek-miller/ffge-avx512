@@ -30,7 +30,6 @@
  * p = FFGE_PRIM. Both n and rnk are assumed to be less than FFGE_PRIM.
  *
  * Perform at most rd rounds of elementary matrix row and column operations.
- *
  */
 void ffge_mat_genrand_prim(int64_t *m, size_t n, size_t rnk, size_t rd,
 			struct xoshiro256ss *rng);

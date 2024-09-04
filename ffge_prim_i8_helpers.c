@@ -26,8 +26,8 @@
  * The matrix m is in fact packed FFGE_WIDTH matrices, the argument k
  * is the matrix index.
  *
- * Returns the flags fl with the k-th flag zeroed if the corresponding matrix
- * is singular.
+ * Returns the full-rank flags passed fl (see docstring for ffge_prim_i8)
+ * with the k-th flag zeroed, if the corresponding matrix is singular.
  */
 uint64_t ffge_pivot_find_i8(int64_t *m, size_t n, size_t pv, uint64_t fl)
 {

@@ -68,10 +68,10 @@ size_t ffge_prim(int64_t *m, size_t n);
  * The matrix m must be aligned to the 64 byte boundary.  For example, for
  * a square matrix of size SIZE, one can alocate static storage explicitly by:
  *
- *     alignas(64) uint64_t m[SIZE * SIZE * FFGE_WIDTH];
+ *     alignas(64) int64_t m[SIZE * SIZE * FFGE_WIDTH];
  *
  * The function returns a set of flags indicating which matrices have full rank,
- * i.e. for 
+ * i.e. for
  *
  *     uint8_t fl = ffge_prim_i8(m, n);
  *

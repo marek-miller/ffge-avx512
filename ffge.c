@@ -23,7 +23,7 @@
 
 /* Find the next row with non-zero element at pivot column pc. Swap rows.
  *
- * Returns
+ * Returns:
  * 	 0	- if no need for swap or the next pivot row foud.
  *	-1	- if no pivot row found and the matrix is singular.
  */

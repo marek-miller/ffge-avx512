@@ -55,7 +55,6 @@ static int rank12(void *)
 
 	return 0;
 }
-	
 
 static int rank12_prim(void *)
 {
@@ -78,7 +77,7 @@ static int genrand_mt_i8(void *)
 
 	return 0;
 }
-	
+
 static int rank12_prim_i8(void *)
 {
 	genrand_mt_i8(nullptr);
@@ -86,7 +85,6 @@ static int rank12_prim_i8(void *)
 
 	return 0;
 }
-
 
 int main(int, char **)
 {
@@ -97,26 +95,26 @@ int main(int, char **)
 
 	bench_mark(&b, REPS, genrand_mt, nullptr);
 	t_genrand = bench_avgmicros(&b);
-	printf("genrand_mt:      %.3f μs\n", t_genrand); 
+	printf("genrand_mt:      %.3f μs\n", t_genrand);
 
 	bench_mark(&b, REPS, rank12, nullptr);
-	printf("rank12:          %.3f μs", bench_avgmicros(&b)); 
+	printf("rank12:          %.3f μs", bench_avgmicros(&b));
 	printf(" (excl. genrand_mt: %.3f μs)\n",
-				 bench_avgmicros(&b) - t_genrand); 
+				 bench_avgmicros(&b) - t_genrand);
 
 	bench_mark(&b, REPS, rank12_prim, nullptr);
-	printf("rank12_prim:     %.3f μs", bench_avgmicros(&b)); 
+	printf("rank12_prim:     %.3f μs", bench_avgmicros(&b));
 	printf(" (excl. genrand_mt: %.3f μs)\n",
-				 bench_avgmicros(&b) - t_genrand); 
+				 bench_avgmicros(&b) - t_genrand);
 
 	bench_mark(&b, REPS, genrand_mt_i8, nullptr);
 	t_genrand_i8 = bench_avgmicros(&b);
-	printf("genrand_mt_i8:   %.3f μs\n", t_genrand_i8); 
+	printf("genrand_mt_i8:   %.3f μs\n", t_genrand_i8);
 
 	bench_mark(&b, REPS, rank12_prim_i8, nullptr);
-	printf("rank12_prim_i8:  %.3f μs", bench_avgmicros(&b)); 
-	printf(" (excl. genrand_mt_i8, avg.: %.3f μs)\n", 
-		(bench_avgmicros(&b) - t_genrand_i8) / FFGE_WIDTH); 
+	printf("rank12_prim_i8:  %.3f μs", bench_avgmicros(&b));
+	printf(" (excl. genrand_mt_i8, avg.: %.3f μs)\n",
+		(bench_avgmicros(&b) - t_genrand_i8) / FFGE_WIDTH);
 
 	return 0;
 }
